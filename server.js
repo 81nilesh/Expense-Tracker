@@ -1,8 +1,17 @@
 const express = require("express");
-const core = require('core')
+const cors = require('cors')
 const morgan = require('morgan')
 const dotenv = require('dotenv')
-const colors = require('colors')
+const colors = require('colors');
+const connectDb = require("./config/connectdb");
+
+
+// config dot env
+dotenv.config();
+
+// database called
+
+connectDb()
 
 const app = express();
 
@@ -15,7 +24,7 @@ app.use(cors())
 
 // routes
 app.get('/', (req, res) => {
-    res.send(<h1>Hello from server</h1>)
+    res.send(`<h1>Hello from server</h1>`)
 })
 
 // port
