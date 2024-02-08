@@ -1,6 +1,5 @@
 const userModel = require('../models/userModel');
 
-
 const loginController = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -17,7 +16,6 @@ const loginController = async (req, res) => {
             success: false,
             error
         })
-
     }
 }
 
@@ -34,7 +32,6 @@ const registerController = async (req, res) => {
             success: false,
             error
         })
-
     }
 }
 module.exports = { loginController, registerController };
