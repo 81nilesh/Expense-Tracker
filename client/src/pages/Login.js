@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
 
-const Register = () => {
+const Login = () => {
 
     // form submit
     const submitHandler = (values) => {
@@ -10,13 +10,10 @@ const Register = () => {
     }
     return (
         <>
-            <div className="register-page">
+            <div className="register-page" style={{ backgroundImage: "url('/path/to/your/background/image.jpg')" }}>
                 <Form layout='vertical' onFinish={submitHandler} className='form'>
-                    <h1 className='text-center'>Register Form</h1>
+                    <h1 className='text-center'>Login Form</h1>
                     <hr />
-                    <Form.Item label="Name" name="name">
-                        <Input />
-                    </Form.Item>
                     <Form.Item label="Email" name="email">
                         <Input type='email' />
                     </Form.Item>
@@ -24,8 +21,9 @@ const Register = () => {
                         <Input type='password' />
                     </Form.Item>
                     <div className='d-flex justify-content-between'>
-                        <Link to="/login">Already Register ? Click Here to login</Link>
-                        <button className='btn btn-primary'>Register</button>
+                        <Link to="/register">Not a user ? Click Here to register</Link>
+
+                        <button className='btn btn-primary'>Login</button>
                     </div>
                 </Form>
             </div>
@@ -33,4 +31,4 @@ const Register = () => {
     );
 }
 
-export default Register;
+export default Login;
