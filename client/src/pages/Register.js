@@ -18,7 +18,7 @@ const Register = () => {
             navigate("/login");
         } catch (error) {
             setLoading(false);
-            message.error("invalid username or password");
+            message.error('something went wrong');
         }
     }
     return (
