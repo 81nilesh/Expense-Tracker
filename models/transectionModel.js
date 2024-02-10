@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 
 const transectionSchema = new mongoose.Schema({
+    userid: {
+        type: String,
+        required: true,
+    },
     amount: {
         type: Number,
         require: [true, "amount is required"]
@@ -28,3 +32,5 @@ const transectionSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 const transectionModel = mongoose.model('transections', transectionSchema)
+
+module.exports = transectionModel;

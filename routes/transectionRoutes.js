@@ -10,7 +10,7 @@ const router = express.Router()
 router.post("/add-transection", addAllTransection);
 
 // get transection
-router.get("/get-transection", getAllTransection);
+router.post("/get-transection", getAllTransection);
 
 
 module.exports = router;
