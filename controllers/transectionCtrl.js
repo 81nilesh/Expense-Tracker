@@ -22,7 +22,20 @@ const getAllTransection = async (req, res) => {
         console.log(error)
         res.status(500).json(error);
     }
-}
+};
+
+const editAllTransection = async (req, res) => {
+    try {
+        await transectionModel.findOneAndUpdate(
+            { _id: req.body.transactionId },
+            req.body.payload
+        );
+        res.status(200).send("Edit Successfully")
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+};
 
 const addAllTransection = async (req, res) => {
     try {
@@ -35,4 +48,4 @@ const addAllTransection = async (req, res) => {
     }
 }
 
-module.exports = { getAllTransection, addAllTransection }
+module.exports = { getAllTransection, addAllTransection, editAllTransection }

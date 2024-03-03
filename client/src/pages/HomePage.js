@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Select, Input, message, Table, DatePicker } from 'antd';
+import { AreaChartOutlined, UnorderedListOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Layout from '../components/Layout/Layout';
 import axios from 'axios';
 import Spinner from '../components/Spinner';
 import moment from 'moment';
+import Analytics from '../components/Layout/Analytics';
+
 
 const { RangePicker } = DatePicker;
 
@@ -14,6 +17,8 @@ const HomePage = () => {
     const [frequency, setFrequency] = useState('7');
     const [selectedDate, setSelectedate] = useState([]);
     const [type, setType] = useState('all');
+    const [viewData, setViewData] = useState('table');
+    const [editable, setEditable] = useState(null);
 
 
     // table data
@@ -41,6 +46,15 @@ const HomePage = () => {
         },
         {
             title: 'Actions',
+            render: (text, record) => (
+                <div>
+                    <EditOutlined onClick={() => {
+                        setEditable(record)
+                        setShowModal(true);
+                    }} />
+                    <DeleteOutlined className='mx-2' />
+                </div>
+            )
         },
     ]
 
@@ -77,10 +91,23 @@ const HomePage = () => {
         try {
             const user = JSON.parse(localStorage.getItem('user'))
             setLoading(true);
-            await axios.post('/transections/add-transection', { ...values, userid: user._id })
-            setLoading(false);
-            message.success("Transection Added Successfully")
+            if (editable) {
+                await axios.post('/transections/edit-transection', { 
+                    payload:{
+                        ...values,
+                        userId:user._id
+                    },
+                    
+                })
+                setLoading(false);
+                message.success("Transection Added Successfully")
+            } else {
+                await axios.post('/transections/add-transection', { ...values, userid: user._id })
+                setLoading(false);
+                message.success("Transection Added Successfully")
+            }
             setShowModal(false);
+            setEditable(null);
         } catch (error) {
             setLoading(false);
             message.error('Faild to add transection')
@@ -121,21 +148,32 @@ const HomePage = () => {
                     )}
                 </div>
 
+                <div className='switch-icons'>
+                    <UnorderedListOutlined
+                        className={`mx-2 ${viewData === 'table' ? 'active-icon' : 'inactive-icon'}`}
+                        onClick={() => setViewData('table')} />
+                    <AreaChartOutlined
+                        className={`mx-2 ${viewData === 'analytics' ? 'active-icon' : 'inactive-icon'}`}
+                        onClick={() => setViewData('analytics')} />
+                </div>
                 <div>
-                    <button className='btn btn-primary' onClick={() => setShowModal(true)}>Add New</button>
+                    <button className='btn btn-primary' style={{ backgroundColor: '#1890ff', color: '#fff', border: 'none', borderRadius: '5px', padding: '8px 16px', cursor: 'pointer' }} onClick={() => setShowModal(true)}>Add New</button>
                 </div>
             </div>
             <div className='content'>
-                <Table columns={columns} dataSource={allTransection} />
+                {viewData === 'table' ? <Table columns={columns} dataSource={allTransection} />
+                    : <Analytics allTransection={allTransection} />
+                }
+
             </div>
 
-            <Modal title="Add Transection"
+            <Modal title={editable ? 'Edit Transaction' : 'Add Transaction'}
                 open={showModal}
                 onCancel={() => setShowModal(false)}
                 footer={false}
             >
                 <hr />
-                <Form layout='vertical' onFinish={handleSubmit}>
+                <Form layout='vertical' onFinish={handleSubmit} initialValues={editable}>
                     <Form.Item label="Amount" name="amount">
                         <Input type="text" />
                     </Form.Item>
@@ -147,7 +185,7 @@ const HomePage = () => {
                     </Form.Item>
                     <Form.Item label="Category" name="category">
                         <Select>
-                            <Select.Option value="russion">Russian</Select.Option>
+                            <Select.Option value="sopping">Shopping</Select.Option>
                             <Select.Option value="salary">Salary</Select.Option>
                             <Select.Option value="tip">Tip</Select.Option>
                             <Select.Option value="project">Project</Select.Option>
