@@ -8,6 +8,7 @@ import moment from 'moment';
 import Analytics from '../components/Layout/Analytics';
 
 
+
 const { RangePicker } = DatePicker;
 
 const HomePage = () => {
@@ -52,7 +53,7 @@ const HomePage = () => {
                         setEditable(record)
                         setShowModal(true);
                     }} />
-                    <DeleteOutlined className='mx-2' />
+                    <DeleteOutlined className='mx-2' onClick={() => { handleDelete(record) }} />
                 </div>
             )
         },
@@ -68,7 +69,7 @@ const HomePage = () => {
             try {
                 const user = JSON.parse(localStorage.getItem('user'))
                 setLoading(true);
-                const res = await axios.post('/transections/get-transection', {
+                const res = await axios.post('/api/v1/transections/get-transection', {
                     userid: user._id,
                     frequency,
                     selectedDate,
@@ -84,7 +85,23 @@ const HomePage = () => {
         }
 
         getAllTransections();
-    }, [frequency, selectedDate, type])
+    }, [frequency, selectedDate, type]);
+
+
+    // delete handler
+    const handleDelete = async (record) => {
+        try {
+            setLoading(true);
+            await axios.post("/api/v1/transections/delete-transection", { transactionId: record._id })
+            setLoading(false);
+            message.success('Transaction Deleted!')
+        } catch (error) {
+            setLoading(false)
+            console.log(error)
+            message.error('unable to delete')
+        }
+    }
+
 
     // form handling
     const handleSubmit = async (values) => {
@@ -92,17 +109,17 @@ const HomePage = () => {
             const user = JSON.parse(localStorage.getItem('user'))
             setLoading(true);
             if (editable) {
-                await axios.post('/transections/edit-transection', { 
-                    payload:{
+                await axios.post('/api/v1/transections/edit-transection', {
+                    payload: {
                         ...values,
-                        userId:user._id
+                        userId: user._id,
                     },
-                    
+                    transactionId: editable._id,
                 })
                 setLoading(false);
-                message.success("Transection Added Successfully")
+                message.success("Transection Updated Successfully")
             } else {
-                await axios.post('/transections/add-transection', { ...values, userid: user._id })
+                await axios.post('/api/v1/transections/add-transection', { ...values, userid: user._id })
                 setLoading(false);
                 message.success("Transection Added Successfully")
             }

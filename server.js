@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const dotenv = require('dotenv')
 const colors = require('colors');
 const connectDb = require("./config/connectdb");
+const path = require("path")
 
 
 // config dot env
@@ -21,6 +22,13 @@ const app = express();
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(cors())
+
+// Static files
+app.use(express.static(path.join(__dirname, "./client/build")))
+
+app.get("*", function (req, res) {
+    res.sendFile(path.join(__dirname, "./client/build/index.html"))
+})
 
 // routes
 // user routes

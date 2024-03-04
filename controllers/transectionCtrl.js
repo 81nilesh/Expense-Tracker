@@ -37,6 +37,16 @@ const editAllTransection = async (req, res) => {
     }
 };
 
+const deleteAllTransection = async (req, res) => {
+    try {
+        await transectionModel.findOneAndDelete({ _id: req.body.transactionId })
+        res.status(200).send('transaction Deleted!')
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error)
+    }
+}
+
 const addAllTransection = async (req, res) => {
     try {
         const newTransection = new transectionModel(req.body);
@@ -48,4 +58,4 @@ const addAllTransection = async (req, res) => {
     }
 }
 
-module.exports = { getAllTransection, addAllTransection, editAllTransection }
+module.exports = { getAllTransection, addAllTransection, editAllTransection, deleteAllTransection }
